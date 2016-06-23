@@ -13,7 +13,7 @@ import java.util.List;
  * Created by johncrooks on 6/23/16.
  */
 @Entity
-@Table
+@Table (name="users")
 public class User {
     @Id
     @GeneratedValue

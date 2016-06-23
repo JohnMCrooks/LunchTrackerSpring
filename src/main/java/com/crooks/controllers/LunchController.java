@@ -32,9 +32,9 @@ public class LunchController {
         String username = (String) session.getAttribute("username");
 
         model.addAttribute("username", username);
-        model.addAttribute("lunches", lunchRepo.findAll());
+        //model.addAttribute("lunches", lunchRepo.findAll());
 
-        return "redirect:/";
+        return "home";
     }
 
     @RequestMapping(path="/login", method = RequestMethod.POST)
@@ -51,7 +51,7 @@ public class LunchController {
         return "redirect:/";
     }
 
-    @RequestMapping(path="/logout")
+    @RequestMapping(path="/logout", method = RequestMethod.POST)
     public String logout(HttpSession session){
         session.invalidate();
         return "redirect:/";
