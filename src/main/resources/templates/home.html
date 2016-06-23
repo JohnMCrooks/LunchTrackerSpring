@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016.
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lunch Tracker</title>
+</head>
+<body>
+
+{{^username}}
+<form action="/login" method="post">
+    <input type="text" name="username" placeholder="Username" />
+    <input type="text" name="password" placeholder="Password" />
+    <button type="submit">Login</button>
+</form>
+{{/username}}
+
+{{#username}}
+Hello, {{.}}<br>
+{{/username}}
+
+
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>
