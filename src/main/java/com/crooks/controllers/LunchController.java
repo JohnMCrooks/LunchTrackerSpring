@@ -4,6 +4,7 @@
 
 package com.crooks.controllers;
 
+import com.crooks.entities.Lunch;
 import com.crooks.entities.User;
 import com.crooks.services.LunchRepository;
 import com.crooks.services.UserRepository;
@@ -11,16 +12,21 @@ import com.crooks.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by johncrooks on 6/23/16.
  */
 @Controller
 public class LunchController {
+    Boolean openEdit = false;
 
     @Autowired
     UserRepository userRepo;
@@ -32,7 +38,9 @@ public class LunchController {
         String username = (String) session.getAttribute("username");
 
         model.addAttribute("username", username);
-        //model.addAttribute("lunches", lunchRepo.findAll());
+        model.addAttribute("lunches", lunchRepo.findAll());
+        model.addAttribute("now", LocalDate.now());
+        model.addAttribute("openEdit", openEdit);
 
         return "home";
     }
@@ -48,6 +56,49 @@ public class LunchController {
         }
 
         session.setAttribute("username", username);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path="/add-lunch", method = RequestMethod.POST)
+    public String addLunch(HttpSession session, String date, String restaurant, String description, double price){
+      String username = (String) session.getAttribute("username");
+        User user = userRepo.findByName(username);
+        if (user == null){
+            return "redirect:/";
+        }
+        Lunch lunch = new Lunch(LocalDate.parse(date),restaurant, price,description, user);
+        lunchRepo.save(lunch);
+
+        return "redirect:/";
+
+    }
+    @RequestMapping(path="/edit-lunch", method = RequestMethod.POST)
+    public String editLunch(HttpSession session, int id, String date, String restaurant, String description, double price){
+        String username = (String) session.getAttribute("username");
+        User user = userRepo.findByName(username);
+
+        Lunch lunch = new Lunch(id, LocalDate.parse(date),restaurant, price,description, user);
+        lunchRepo.save(lunch);
+
+        openEdit = false;
+        return "redirect:/";
+
+    }
+
+    @RequestMapping(value="/openEdit", method = RequestMethod.POST)
+    public String openEdit(){
+        if(openEdit){
+           openEdit= !openEdit;
+        }else if (!openEdit){
+            openEdit = !openEdit;
+        }
+        return "redirect:/";
+    }
+
+    @RequestMapping(path="/delete-lunch", method=RequestMethod.POST)
+    public String deleteLunch(int id){
+        lunchRepo.delete(id);
+
         return "redirect:/";
     }
 

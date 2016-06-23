@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Lunch Tracker</title>
 </head>
-<body>
+
 
 {{^username}}
 <form action="/login" method="post">
@@ -19,13 +19,51 @@
 {{/username}}
 
 {{#username}}
-Hello, {{.}}<br>
+<h1>Hello, {{.}}</h1>
+    <h3>New Entry:</h3>
+    <form action="/add-lunch" method="post">
+        <input type="datetime" name="date" value="{{now}}" />
+        <input type="text" name="restaurant" placeholder="Restaurant" />
+        <input type="number" name="price" placeholder="Price" step=".01"/>
+        <input type="text" name="description" placeholder="Description" />
+        <button type="submit">Submit</button>
+    </form>
 
 
-<form action="/logout" method="post">
-    <button type="submit">Logout</button>
-</form>
+
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
 {{/username}}
+
+
+<h3>Previous Meals:</h3>
+{{#lunches}}
+<li>
+    {{date}} - {{restaurant}}  - {{price}} - {{description}}
+    <form action="/openEdit" method ="post">
+        <input type="hidden" name="openEdit" value="true" />
+        <button id="{{id}}" type="submit">Edit</button>
+    </form>
+
+    <form action="/delete-lunch" method="post">
+        <input type="hidden" name="id" value="{{id}}">
+        <button type="submit">Delete</button>
+    </form>
+
+    {{#openEdit}}
+    <form action="/edit-lunch" method="post">
+        <input type="hidden" name="id" value="{{id}}" />
+        <input type="datetime" name="date" value="{{date}}" />
+        <input type="text" name="restaurant" value="{{restaurant}}" />
+        <input type="number" name="price" value="{{price}}" step=".01"/>
+        <input type="text" name="description" value="{{description}}" />
+        <button type="submit">Submit</button>
+    </form>
+    {{/openEdit}}
+</li>
+
+{{/lunches}}
 
 
 

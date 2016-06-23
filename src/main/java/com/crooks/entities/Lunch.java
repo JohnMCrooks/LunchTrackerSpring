@@ -26,7 +26,7 @@ public class Lunch {
 
 
     @Column(nullable = false)
-    String price;
+    double price;
 
     @Column(nullable = false)
     String description;
@@ -37,7 +37,16 @@ public class Lunch {
     public Lunch() {
     }
 
-    public Lunch(LocalDate date, String restaurant, String price, String description, User user) {
+    public Lunch(int id, LocalDate date, String restaurant, double price, String description, User user) {
+        this.id = id;
+        this.date = date;
+        this.restaurant = restaurant;
+        this.price = price;
+        this.description = description;
+        this.user = user;
+    }
+
+    public Lunch(LocalDate date, String restaurant, double price, String description, User user) {
         this.date = date;
         this.restaurant = restaurant;
         this.price = price;
@@ -61,11 +70,11 @@ public class Lunch {
         this.restaurant = restaurant;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
