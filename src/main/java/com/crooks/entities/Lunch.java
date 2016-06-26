@@ -4,6 +4,8 @@
 
 package com.crooks.entities;
 
+import org.hibernate.action.internal.OrphanRemovalAction;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -52,6 +54,14 @@ public class Lunch {
         this.price = price;
         this.description = description;
         this.user = user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getDate() {

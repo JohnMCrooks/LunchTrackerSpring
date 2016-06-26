@@ -40,27 +40,28 @@
 <h3>Previous Meals:</h3>
 {{#lunches}}
 <li>
-    {{date}} - {{restaurant}}  - {{price}} - {{description}}
-    <form action="/openEdit" method ="post">
+    {{#user}}{{name}} {{/user}}: {{date}} - {{restaurant}}  - {{price}} - {{description}}
+    <form action="/openEdit" method ="post" style="display:inline">
         <input type="hidden" name="openEdit" value="true" />
+        <input type="hidden" name="name" value="{{#user}}{{name}}{{/user}}" />
         <button id="{{id}}" type="submit">Edit</button>
     </form>
 
-    <form action="/delete-lunch" method="post">
+    <form action="/delete-lunch" method="post" style="display:inline">
         <input type="hidden" name="id" value="{{id}}">
         <button type="submit">Delete</button>
     </form>
 
-    {{#openEdit}}
-    <form action="/edit-lunch" method="post">
-        <input type="hidden" name="id" value="{{id}}" />
-        <input type="datetime" name="date" value="{{date}}" />
-        <input type="text" name="restaurant" value="{{restaurant}}" />
-        <input type="number" name="price" value="{{price}}" step=".01"/>
-        <input type="text" name="description" value="{{description}}" />
-        <button type="submit">Submit</button>
-    </form>
-    {{/openEdit}}
+        {{#openEdit}}
+        <form action="/edit-lunch" method="post" style="display:inline">
+            <input type="hidden" name="id" value="{{id}}" />
+            <input type="datetime" name="date" value="{{date}}" />
+            <input type="text" name="restaurant" value="{{restaurant}}" />
+            <input type="number" name="price" value="{{price}}" step=".01"/>
+            <input type="text" name="description" value="{{description}}" />
+            <button type="submit">Submit</button>
+        </form>
+        {{/openEdit}}
 </li>
 
 {{/lunches}}

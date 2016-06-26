@@ -25,8 +25,10 @@ public class User {
     @Column(nullable = false)
     String password;
 
-    @OneToMany
+    @OneToMany(mappedBy="user", orphanRemoval = true)
     List<Lunch> lunchList;
+
+    Boolean openEdit;
 
     public User() {
     }
@@ -34,7 +36,31 @@ public class User {
     public User(String name, String password) {
         this.name = name;
         this.password = password;
+        this.openEdit = false;
+
+    }
+
+    public User(String name, String password, List<Lunch> lunchList, Boolean openEdit) {
+        this.name = name;
+        this.password = password;
         this.lunchList = lunchList;
+        this.openEdit = openEdit;
+    }
+
+    public Boolean getOpenEdit() {
+        return openEdit;
+    }
+
+    public void setOpenEdit(Boolean openEdit) {
+        this.openEdit = openEdit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
