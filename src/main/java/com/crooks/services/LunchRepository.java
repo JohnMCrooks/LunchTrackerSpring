@@ -17,7 +17,7 @@ public interface LunchRepository extends CrudRepository<Lunch, Integer> {
     @Query("SELECT SUM(price) FROM Lunch l  WHERE  l.user.id = ?1")  //use class name for 'Lunch' specification. % sign is a wildcard
     public Iterable<Lunch> usertotal(int userId);
 
-    @Query("SELECT AVG(price)  FROM Lunch l  WHERE  l.user.id = ?1")  //use class name for 'Lunch' specification. % sign is a wildcard
+    @Query("SELECT AVG(price)  FROM Lunch l  WHERE  l.user.id = ?1")
     public Iterable<Lunch> userAverage(int userId);
 
     @Query("SELECT SUM(price) FROM Lunch l")
@@ -25,4 +25,7 @@ public interface LunchRepository extends CrudRepository<Lunch, Integer> {
 
     @Query("SELECT AVG(price) FROM Lunch l")
     public Iterable<Lunch> globalAvg();
+
+    @Query("SELECT l FROM Lunch l WHERE l.restaurant LIKE ?1%")
+    public Iterable<Lunch> searchRes(String restaurant);
 }

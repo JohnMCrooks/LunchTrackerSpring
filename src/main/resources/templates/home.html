@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Lunch Tracker</title>
 </head>
-
+<body>
 
 {{^username}}
 <form action="/login" method="post">
@@ -20,6 +20,10 @@
 
 {{#username}}
 <h1>Hello  {{.}}</h1>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+
     <table>
         <tr>
             <td>Total Spent Eating Out: <b>${{userTotal}}</b></td>
@@ -33,6 +37,22 @@
         </tr>
 
     </table>
+<br>
+<br>
+    <form action ="/" method="get" style='display:inline'>
+        <input type="text" name="search" placeholder="Search by Restaurant" />
+        <button type="submit">Search</button>
+    </form>
+    <form action ="/" method="get"style='display:inline'>
+        <input type="hidden" name="search" value=null />
+        <button type="submit">Clear Results</button>
+    </form>
+<br>
+{{#searchRes}}
+        <b>{{#user}}{{name}}{{/user}} </b>: {{date}} - {{restaurant}}  - {{price}} - {{description}}<br>
+
+{{/searchRes}}
+
 
 {{#username}}
     <h3>New Entry:</h3>
@@ -43,13 +63,11 @@
         <input type="text" name="description" placeholder="Description" />
         <button type="submit">Submit</button>
     </form>
-<form action="/logout" method="post">
-    <button type="submit">Logout</button>
-</form>
+
 {{/username}}
 
 
-<h3>Previous Meals:</h3>
+<h3>All Posted Meals:</h3>
 {{#lunches}}
 <li>
     {{#user}}

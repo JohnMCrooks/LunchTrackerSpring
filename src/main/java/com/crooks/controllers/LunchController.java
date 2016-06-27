@@ -35,10 +35,10 @@ public class LunchController {
     LunchRepository lunchRepo;
 
     @RequestMapping(path="/", method = RequestMethod.GET)
-    public String home(HttpSession session, Model model){
+    public String home(HttpSession session, Model model, String search){
         String username = (String) session.getAttribute("username");
         User user = userRepo.findByName(username);
-
+        Iterable<Lunch> tempLunchArray;
         model.addAttribute("username", username);
         model.addAttribute("lunches", lunchRepo.findAll());
         model.addAttribute("now", LocalDate.now());
@@ -49,8 +49,12 @@ public class LunchController {
             model.addAttribute("isMe", user.getMe());
             model.addAttribute("userTotal", lunchRepo.usertotal(user.getId()));
             model.addAttribute("userAvg", lunchRepo.userAverage(user.getId()));
-
         }
+        if (search !=null){
+            tempLunchArray = lunchRepo.searchRes(search);
+            model.addAttribute("searchRes", tempLunchArray);
+        }
+
         return "home";
     }
 
