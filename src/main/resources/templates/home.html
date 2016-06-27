@@ -15,11 +15,26 @@
     <input type="text" name="username" placeholder="Username" />
     <input type="text" name="password" placeholder="Password" />
     <button type="submit">Login</button>
-</form>
+</form> <br><br>
 {{/username}}
 
 {{#username}}
-<h1>Hello, {{.}}</h1>
+<h1>Hello  {{.}}</h1>
+    <table>
+        <tr>
+            <td>Total Spent Eating Out: <b>${{userTotal}}</b></td>
+            <td>Average Meal Price: <b>${{userAvg}}</b></td>
+        </tr>
+{{/username}}
+        <tr></tr>
+        <tr>
+            <td>Global Total: <b>${{globalTotal}}</b></td>
+            <td>Global Average Meal: <b>${{globalAvg}}</b></td>
+        </tr>
+
+    </table>
+
+{{#username}}
     <h3>New Entry:</h3>
     <form action="/add-lunch" method="post">
         <input type="datetime" name="date" value="{{now}}" />
@@ -28,31 +43,30 @@
         <input type="text" name="description" placeholder="Description" />
         <button type="submit">Submit</button>
     </form>
-
-
-
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
 {{/username}}
 
 
 <h3>Previous Meals:</h3>
 {{#lunches}}
 <li>
-    {{#user}}{{name}} {{/user}}: {{date}} - {{restaurant}}  - {{price}} - {{description}}
-    <form action="/openEdit" method ="post" style="display:inline">
-        <input type="hidden" name="openEdit" value="true" />
-        <input type="hidden" name="name" value="{{#user}}{{name}}{{/user}}" />
-        <button id="{{id}}" type="submit">Edit</button>
-    </form>
+    {{#user}}
+        <b>{{name}} </b>: {{date}} - {{restaurant}}  - {{price}} - {{description}}
+        {{#isMe}}
+                <form action="/openEdit" method ="post" style="display:inline">
+                    <input type="hidden" name="openEdit" value="true" />
+                    <input type="hidden" name="name" value="{{#user}}{{name}}{{/user}}" />
+                    <button id="{{id}}" type="submit">Edit</button>
+                </form>
 
-    <form action="/delete-lunch" method="post" style="display:inline">
-        <input type="hidden" name="id" value="{{id}}">
-        <button type="submit">Delete</button>
-    </form>
 
-        {{#openEdit}}
+
+        {{/isMe}}
+    {{/user}}
+
+    {{#user.openEdit}}
         <form action="/edit-lunch" method="post" style="display:inline">
             <input type="hidden" name="id" value="{{id}}" />
             <input type="datetime" name="date" value="{{date}}" />
@@ -61,7 +75,15 @@
             <input type="text" name="description" value="{{description}}" />
             <button type="submit">Submit</button>
         </form>
-        {{/openEdit}}
+    {{/user.openEdit}}
+
+    {{#user.isMe}}
+    <form action="/delete-lunch" method="post" style="display:inline">
+        <input type="hidden" name="id" value="{{id}}">
+        <button type="submit">Delete</button>
+    </form>
+    {{/user.isMe}}
+
 </li>
 
 {{/lunches}}

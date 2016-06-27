@@ -29,6 +29,7 @@ public class User {
     List<Lunch> lunchList;
 
     Boolean openEdit;
+    Boolean isMe;
 
     public User() {
     }
@@ -37,6 +38,7 @@ public class User {
         this.name = name;
         this.password = password;
         this.openEdit = false;
+        this.isMe = false;
 
     }
 
@@ -45,6 +47,15 @@ public class User {
         this.password = password;
         this.lunchList = lunchList;
         this.openEdit = openEdit;
+
+    }
+
+    public Boolean getMe() {
+        return isMe;
+    }
+
+    public void setMe(Boolean me) {
+        isMe = me;
     }
 
     public Boolean getOpenEdit() {

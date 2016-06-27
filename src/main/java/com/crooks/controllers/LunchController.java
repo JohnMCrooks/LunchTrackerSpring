@@ -42,8 +42,14 @@ public class LunchController {
         model.addAttribute("username", username);
         model.addAttribute("lunches", lunchRepo.findAll());
         model.addAttribute("now", LocalDate.now());
+        model.addAttribute("globalTotal", lunchRepo.globalTotal());
+        model.addAttribute("globalAvg", lunchRepo.globalAvg());
         if (user !=null) {
             model.addAttribute("openEdit", user.getOpenEdit());
+            model.addAttribute("isMe", user.getMe());
+            model.addAttribute("userTotal", lunchRepo.usertotal(user.getId()));
+            model.addAttribute("userAvg", lunchRepo.userAverage(user.getId()));
+
         }
         return "home";
     }
@@ -53,10 +59,14 @@ public class LunchController {
         User user = userRepo.findByName(username);
         if(user==null){
             user = new User(username, PasswordStorage.createHash(password));
+            user.setMe(true);
             userRepo.save(user);
+
         }else if(!PasswordStorage.verifyPassword(password, user.getPassword())){
             throw new Exception("Wrong password muh dude!");
         }
+        user.setMe(true);
+        userRepo.save(user);
 
         session.setAttribute("username", username);
         return "redirect:/";
@@ -90,6 +100,7 @@ public class LunchController {
             Lunch lunch = new Lunch(id, LocalDate.parse(date), restaurant, price, description, user);
             lunchRepo.save(lunch);
             user.setOpenEdit(false);
+            userRepo.save(user);
         }
         return "redirect:/";
 
@@ -99,14 +110,18 @@ public class LunchController {
     public String openEdit(HttpSession session, String name) throws Exception {
         String username = (String) session.getAttribute("username");
         User user1 = userRepo.findByName(username);
-        if (name.equals(user1.getName())){
+        if(user1 ==null){
+            throw new Exception("---- You must Log in if you want to edit or delete a post! ----");
+        } else if (name.equals(user1.getName())){
             if(user1.getOpenEdit()){
                 user1.setOpenEdit(!user1.getOpenEdit());
+                userRepo.save(user1);
             }else if (!user1.getOpenEdit()){
                 user1.setOpenEdit(!user1.getOpenEdit());
+                userRepo.save(user1);
             }
         } else{
-            throw new Exception("This isn't your post, You can't edit this...");
+            throw new Exception(" This isn't your post, You can't edit this... ");
         }
 
             return "redirect:/";
@@ -116,18 +131,18 @@ public class LunchController {
     public String deleteLunch(HttpSession session, int id) throws Exception {
         String username = (String) session.getAttribute("username");
         User user = userRepo.findByName(username);
-
-        if (user.getId()==lunchRepo.findOne(id).getUser().getId()) {
-
             lunchRepo.delete(id);
-        } else{
-            throw new Exception("---- WHOA WHOA WHOA, this isn't yours to delete! ----");
-        }
+            System.out.println("blahhhh");
+
         return "redirect:/";
     }
 
     @RequestMapping(path="/logout", method = RequestMethod.POST)
     public String logout(HttpSession session){
+        String username = (String) session.getAttribute("username");
+        User user = userRepo.findByName(username);
+        user.setMe(false);                              //flipping the boolean so the edit/delete buttons won't show for anyone else.
+        userRepo.save(user);
         session.invalidate();
         return "redirect:/";
     }
